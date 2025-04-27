@@ -9,18 +9,30 @@
 <body>
     <!-- ...existing code... -->
     <!-- Scripts -->
-    <!-- <script src="/static/js/settings_sync_utility.js"></script> Removed -->
-    <!-- <script src="/static/js/core.js"></script> Removed -->
-    <!-- <script src="/static/js/settings_loader.js"></script> Removed -->
-    <script src="/static/js/settings_forms.js"></script> <!-- Keep for now -->
-    <!-- <script src="/static/js/settings_initializer.js"></script> Removed -->
-    <!-- <script src="/static/js/settings_sync.js"></script> Removed -->
-    <script src="/static/js/new-main.js"></script> <!-- Consolidated main script -->
-    <!-- App-specific scripts -->
-    <script src="/static/js/apps/sonarr.js"></script>
-    <script src="/static/js/apps/radarr.js"></script>
-    <script src="/static/js/apps/lidarr.js"></script>
-    <script src="/static/js/apps/readarr.js"></script>
-    <!-- ...existing code... -->
+    <!-- React Bundle (replaces individual script files) -->
+    <script src="/static/js/react-bundle.js"></script>
+    
+    <!-- Version loader script -->
+    <script>
+        function loadVersion() {
+            fetch('/version.txt')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to load version');
+                    }
+                    return response.text();
+                })
+                .then(version => {
+                    const versionElement = document.getElementById('version-value');
+                    if (versionElement) {
+                        versionElement.textContent = version.trim();
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading version:', error);
+                });
+        }
+        document.addEventListener('DOMContentLoaded', loadVersion);
+    </script>
 </body>
 </html>

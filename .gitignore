@@ -9,42 +9,28 @@ __pycache__/
 # vertual enviornments
 .venv/
 
-# React files
-.idea/
-.vscode/
-build/
-*.tgz
-template/src/__tests__/__snapshots__/
-lerna-debug.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-/.changelog
-.npm/
+# React build outputs
+/build
+/dist
+/public/static/js/react-bundle.js
+/public/static/js/react-bundle.js.map
 
-.DS_STORE
-node_modules
-scripts/flow/*/.flowconfig
-.flowconfig
-*~
-*.pyc
-.grunt
-_SpecRunner.html
-__benchmarks__
-build/
-remote-repo/
-coverage/
-.module-cache
-fixtures/dom/public/react-dom.js
-fixtures/dom/public/react.js
-test/the-files-to-test.generated.js
-*.log*
-chrome-user-data
-*.sublime-project
-*.sublime-workspace
-.idea
-*.iml
-.vscode
+# Legacy JS and configuration files we're removing
+/src/lib/config.js
+/frontend/src/lib/config.js
+/src/routes/api/settings/+server.js
+/frontend/src/routes/api/settings/+server.js
+/src/settings-manager.js
+/frontend/src/settings-manager.js
+/*.config.js
+/frontend/static/js/settings-manager.js
+/frontend/static/js/api-client.js
+/frontend/static/js/api-handlers.js
+/frontend/static/js/rest-client.js
+
+# IDE and editor files
+.vscode/
+.idea/
 *.swp
 *.swo
 

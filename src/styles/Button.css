@@ -1,0 +1,135 @@
+/* Base button styles */
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.1s;
+  gap: 8px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.button:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--accent-color-transparent);
+}
+
+.button:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Button variants */
+.button-primary {
+  background-color: var(--button-primary-bg);
+  color: var(--button-primary-text);
+}
+
+.button-primary:hover:not(:disabled) {
+  background-color: var(--button-primary-hover);
+}
+
+.button-danger {
+  background-color: var(--button-danger-bg);
+  color: white;
+}
+
+.button-danger:hover:not(:disabled) {
+  background-color: var(--button-danger-hover);
+}
+
+.button-success {
+  background-color: var(--button-success-bg);
+  color: white;
+}
+
+.button-success:hover:not(:disabled) {
+  background-color: var(--button-success-hover);
+}
+
+.button-secondary {
+  background-color: var(--bg-tertiary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+
+.button-secondary:hover:not(:disabled) {
+  background-color: var(--bg-primary);
+}
+
+.button-warning {
+  background-color: var(--warning-color);
+  color: white;
+}
+
+.button-warning:hover:not(:disabled) {
+  background-color: #e67e22;
+}
+
+/* Button sizes */
+.button-small {
+  padding: 4px 12px;
+  font-size: 12px;
+}
+
+.button-medium {
+  padding: 8px 16px;
+  font-size: 14px;
+}
+
+.button-large {
+  padding: 10px 20px;
+  font-size: 16px;
+}
+
+/* Loading state */
+.button-loading {
+  position: relative;
+  color: transparent !important;
+}
+
+.button-loading .loader {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border: 2px solid;
+  border-radius: 50%;
+  border-color: #fff #fff #fff transparent;
+  animation: button-loading-spinner 0.75s linear infinite;
+}
+
+@keyframes button-loading-spinner {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Full width */
+.button-full-width {
+  width: 100%;
+}
+
+/* Icon positioning */
+.icon-left {
+  margin-right: 4px;
+}
+
+.icon-right {
+  margin-left: 4px;
+}
+
+/* Dark theme specific overrides */
+.dark-theme .button-secondary {
+  background-color: var(--bg-tertiary);
+  color: var(--text-primary);
+  border-color: var(--border-color);
+}

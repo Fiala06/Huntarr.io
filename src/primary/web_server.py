@@ -10,21 +10,16 @@ from threading import Lock
 from primary.utils.logger import LOG_DIR, APP_LOG_FILES, MAIN_LOG_FILE # Import log constants
 from primary import settings_manager # Import settings_manager
 
-# import socket # No longer used
 import json
-# import signal # No longer used for reload
 import sys
 import qrcode
 import pyotp
 import base64
 import io
-# import requests # No longer used
 import logging
 import threading
 import importlib # Added import
 from flask import Flask, render_template, request, jsonify, Response, send_from_directory, redirect, url_for, session, stream_with_context # Added stream_with_context
-# from src.primary.config import API_URL # No longer needed directly
-# Use only settings_manager
 from src.primary import settings_manager
 from src.primary.utils.logger import setup_logger, get_logger, LOG_DIR # Import get_logger and LOG_DIR
 from src.primary.auth import (
@@ -42,12 +37,12 @@ from src.primary.apps.blueprints import sonarr_bp, radarr_bp, lidarr_bp, readarr
 log = logging.getLogger('werkzeug')
 log.setLevel(logging.ERROR)
 
-# Configure template and static paths to use the frontend directory
-template_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'frontend', 'templates'))
-static_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'frontend', 'static'))
+# Configure paths for the React build directory
+build_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', 'build'))
+static_dir = os.path.join(build_dir, 'static')
 
 # Create Flask app
-app = Flask(__name__, template_folder=template_dir, static_folder=static_dir)
+app = Flask(__name__, static_folder=static_dir)
 app.secret_key = os.environ.get('SECRET_KEY', 'dev_key_for_sessions')
 
 # Register blueprints
@@ -60,6 +55,11 @@ app.register_blueprint(whisparr_bp, url_prefix='/api/whisparr')
 
 # Register the authentication check to run before requests
 app.before_request(authenticate_request)
+
+# Lock for accessing the log files
+log_lock = Lock()
+
+# Define known log files based
 
 # Removed MAIN_PID and signal-related code
 
@@ -80,14 +80,20 @@ KNOWN_LOG_FILES = {k: v for k, v in KNOWN_LOG_FILES.items() if v}
 
 ALL_APP_LOG_FILES = list(KNOWN_LOG_FILES.values()) # List of all individual log file paths
 
-@app.route('/')
-def home():
-    return render_template('index.html')
-
-@app.route('/user')
-def user():
-    # User account screen
-    return render_template('user.html')
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def serve_react_app(path):
+    # Skip API routes - let those be handled by their respective handlers
+    if path.startswith('api/'):
+        return {"error": "Not found"}, 404
+    
+    # Check if it's a static file path
+    static_file_path = os.path.join(build_dir, path)
+    if os.path.isfile(static_file_path):
+        return send_from_directory(build_dir, path)
+    
+    # For all other routes, serve the React index.html
+    return send_from_directory(build_dir, 'index.html')
 
 # Removed /settings and /logs routes if handled by index.html and JS routing
 # Keep /logs if it's the actual SSE endpoint
