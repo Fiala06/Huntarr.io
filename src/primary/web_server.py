@@ -432,19 +432,17 @@ def start_web_server():
     web_logger.info("--- Calling app.run() ---") # Added log
     app.run(host=host, port=port, debug=debug_mode, use_reloader=False) # Keep this line if needed for direct execution testing, but it's now handled by root main.py
 
+
 import os
 from flask import current_app
 
-@current_app.context_processor
+@app.context_processor
 def inject_version():
-    """
-    Reads version.txt from your project root and
-    makes `version` available in all Jinja templates.
-    """
-    version_file = os.path.join(current_app.root_path, '..', 'version.txt')
+    # root_path ≃ …/src/primary → go up two levels to the project root
+    project_root = os.path.abspath(os.path.join(current_app.root_path, '..', '..'))
+    version_path = os.path.join(project_root, 'version.txt')
     try:
-        with open(version_file, 'r') as f:
-            version = f.read().strip()
-    except Exception:
+        version = open(version_path).read().strip()
+    except OSError:
         version = 'Unknown'
-    return dict(version=version)
+    return { 'version': version }
