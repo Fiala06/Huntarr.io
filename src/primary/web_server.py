@@ -431,3 +431,20 @@ def start_web_server():
     # In production, use Werkzeug's simple server or a proper WSGI server
     web_logger.info("--- Calling app.run() ---") # Added log
     app.run(host=host, port=port, debug=debug_mode, use_reloader=False) # Keep this line if needed for direct execution testing, but it's now handled by root main.py
+
+import os
+from flask import current_app
+
+@current_app.context_processor
+def inject_version():
+    """
+    Reads version.txt from your project root and
+    makes `version` available in all Jinja templates.
+    """
+    version_file = os.path.join(current_app.root_path, '..', 'version.txt')
+    try:
+        with open(version_file, 'r') as f:
+            version = f.read().strip()
+    except Exception:
+        version = 'Unknown'
+    return dict(version=version)
